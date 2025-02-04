@@ -6,6 +6,9 @@ C++ implementation of [Monte Carlo Tree Search](https://en.wikipedia.org/wiki/Mo
  - [ ] Checkers game simulation
  - [ ] MCTS algorithm
  - [ ] UI (most probably web)
+
+ 
  Other stuff:
  - [ ] Cmake
+ - [ ] Tests
  - [ ] Beautification of Readme
