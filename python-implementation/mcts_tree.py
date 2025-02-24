@@ -1,8 +1,6 @@
 from mcts_node import MCTSNode
 from game_state import GameState
-import multiprocessing as mp
 from checkers import Checkers
-import time
 import numpy as np
 
 class MCTSTree:
@@ -18,6 +16,7 @@ class MCTSTree:
         self.my_game = my_game
         self.explore_rate = explore_rate
         self.sims_per = sims_per
+        self.iteration_limit = iteration_limit
 
     def get_best_move(self, init_state: GameState):
         self.root = MCTSNode(init_state)
@@ -36,8 +35,9 @@ class MCTSTree:
             current_node = current_node.children_nodes[max_score_index]
             possible_moves = self.my_game.get_moves(current_node.game_state)
         return current_node
-
-    def _expansion(self) -> None:
+    
+    def _expansion(self, leaf_mode: MCTSNode) -> None:
+        # check 
         pass
     
     def _simulation(self) -> None:

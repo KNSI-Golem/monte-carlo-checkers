@@ -4,8 +4,7 @@ class Checkers:
     leaping over multiple pieces in succession. 
     Should we store this a single move, or rather as a sequence?
     '''
-
-    def get_moves(self):
+    def get_moves(self, check_state = None):
         pass
 
     def make_move(self, move):
@@ -14,11 +13,14 @@ class Checkers:
         '''
         pass
 
+    def make_random_move(self):
+        pass
+
     def get_state(self):
         pass
 
-    def load_state(self, new_state):
+    def set_state(self, new_state):
         '''
         This will be used during training to make random moves from MCTSNodes state.
         '''
-        pass
+        self.state = new_state

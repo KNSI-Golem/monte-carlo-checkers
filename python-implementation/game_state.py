@@ -10,7 +10,7 @@ class GameState:
 
     board_state = None # how do we want to store these?
     active_player = None
-    possible_moves = None # should this be stored 
+    possible_moves: tuple[str] = None
 
     def __init__(self, state_representation: str) -> None:
         '''
@@ -19,3 +19,4 @@ class GameState:
         pass
 
     def get_representation(self):
+        pass
