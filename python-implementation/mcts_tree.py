@@ -3,16 +3,18 @@ from game_state import GameState
 from checkers import Checkers
 import numpy as np
 
+
 class MCTSTree:
-    '''
+    """
     4 stages of MCTS:
     1. selection - select node
     2. expansion - add all of node's kids to tree
     3. simulation - play `sims_per` games with random moves, save nr of wins and nr of attempts
     4. backprop - backprop the nr of wins and attempts
-    '''
+    """
         
     def __init__(self, my_game: Checkers, explore_rate: float, sims_per: int, iteration_limit: int) -> None:
+        self.root = None
         self.my_game = my_game
         self.explore_rate = explore_rate
         self.sims_per = sims_per
