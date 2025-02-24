@@ -1,3 +1,6 @@
+from dataclasses import dataclass
+
+@dataclass
 class GameState:
     '''
     It needs to be possible to load and save a game state from some sort of string,
@@ -7,16 +10,15 @@ class GameState:
     GameState will also need == operator so that we can find node in tree which 
     is responsible for current GameState 
     '''
+    board_state: str = None # how do we want to store these?
+    active_player: str = None # B or W
+    possible_moves: list[str] = None
 
-    board_state = None # how do we want to store these?
-    active_player = None
-    possible_moves: tuple[str] = None
-
-    def __init__(self, state_representation: str) -> None:
-        '''
-        This should read above values from representation and save them in self.
-        '''
-        pass
-
-    def get_representation(self):
-        pass
+    # def __init__(self, board_state: str, possible_moves: tuple[str], active_player: str) -> None:
+    #     '''
+    #     This should read above values from representation and save them in self.
+    #     '''
+    #     self.board_state = board_state
+    #     self.possible_moves = possible_moves
+    #     self.active_player = active_player
+    #     pass
