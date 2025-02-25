@@ -14,6 +14,7 @@ class GameState:
     board_state: str = None  # how do we want to store these?
     active_player: str = None  # B or W
     possible_moves: list[str] = None
+    terminated: bool = False
 
     # def __init__(self, board_state: str, possible_moves: tuple[str], active_player: str) -> None:
     #     '''
@@ -23,3 +24,8 @@ class GameState:
     #     self.possible_moves = possible_moves
     #     self.active_player = active_player
     #     pass
+    def is_terminal(self):
+        return self.terminated
+
+    def get_reward(self):
+        pass
