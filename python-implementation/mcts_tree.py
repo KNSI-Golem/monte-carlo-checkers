@@ -2,7 +2,7 @@ from copy import deepcopy
 
 from mcts_node import MCTSNode
 from game_state import GameState
-from checkers import Checkers
+from game_simulation import GameSimulation
 import numpy as np
 
 
@@ -15,11 +15,10 @@ class MCTSTree:
     4. backprop - backprop the nr of wins and attempts
     """
 
-    def __init__(self, my_game: Checkers, explore_rate: float, sims_per: int, iteration_limit: int) -> None:
+    def __init__(self, my_game: Checkers, explore_rate: float, iteration_limit: int) -> None:
         self.root = None
-        self.my_game = deepcopy(my_game)
+        self.my_game = my_game
         self.explore_rate = explore_rate
-        self.sims_per = sims_per
         self.iteration_limit = iteration_limit
 
     def mcts_search(self, init_state: GameState) -> str:
@@ -73,5 +72,6 @@ class MCTSTree:
             leaf_node = leaf_node.parent_node
 
     def _get_best_child(self) -> MCTSNode:
-        root_kids = [kid for kid in self.root.children_nodes]
-        return max(root_kids, key=lambda x: x.q_value / x.visit_count)
+        root_children = [child for child in self.root.children_nodes]
+        return max(root_children, key=lambda x: x.q_value / x.visit_count)
+
