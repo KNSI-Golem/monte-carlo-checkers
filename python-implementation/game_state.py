@@ -1,5 +1,8 @@
 from dataclasses import dataclass
 
+# needs refactoring, this class should give only an interface ie. possible_moves, active_player, not an actual implementation.
+
+
 @dataclass
 class GameState:
     '''
@@ -10,8 +13,8 @@ class GameState:
     GameState will also need == operator so that we can find node in tree which 
     is responsible for current GameState 
     '''
-    board_state: str = None # how do we want to store these?
-    active_player: str = None # B or W
+    board_state: str = None  # how do we want to store these?
+    active_player: str = None  # B or W
     possible_moves: list[str] = None
 
     # def __init__(self, board_state: str, possible_moves: tuple[str], active_player: str) -> None:

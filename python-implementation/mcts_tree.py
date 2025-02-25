@@ -1,7 +1,8 @@
 from mcts_node import MCTSNode
 from game_state import GameState
-from checkers import Checkers
+from game_simulation import GameSimulation
 import numpy as np
+
 
 class MCTSTree:
     '''
@@ -11,8 +12,8 @@ class MCTSTree:
     3. simulation - play `sims_per` games with random moves, save nr of wins and nr of attempts
     4. backprop - backprop the nr of wins and attempts
     '''
-        
-    def __init__(self, my_game: Checkers, explore_rate: float, sims_per: int, iteration_limit: int) -> None:
+
+    def __init__(self, my_game: GameSimulation, explore_rate: float, sims_per: int, iteration_limit: int) -> None:
         self.my_game = my_game
         self.explore_rate = explore_rate
         self.sims_per = sims_per
@@ -25,7 +26,6 @@ class MCTSTree:
         return best_kid.prev_move
 
     def _run_mcts(self) -> None:
-
         for _ in range(self.iteration_limit):
             node = self._selection(self.root)
             node = self._expansion(node)
@@ -38,14 +38,14 @@ class MCTSTree:
             max_score_index = np.argmax(ucb_scores)[0]
             current_node = current_node.children_nodes[max_score_index]
         return current_node
-    
+
     def _expansion(self, leaf_node: MCTSNode) -> MCTSNode:
         move_index = np.random.randint(0, len(leaf_node.moves_not_taken))
         move = leaf_node.moves_not_taken.pop(move_index)
         new_node = MCTSNode(self.my_game.make_move(leaf_node.game_state, move), parent_node=leaf_node, prev_move=move)
         leaf_node.children_nodes.append(new_node)
         return new_node
-    
+
     def _simulation(self, start_node: MCTSNode) -> None:
         for _ in range(self.sims_per):
 
@@ -69,4 +69,3 @@ class MCTSTree:
     def _get_best_child(self) -> MCTSNode:
         root_kids = [kid for kid in self.root.children_nodes]
         return max(root_kids, key=lambda x: x.wins/x.sims)
-
