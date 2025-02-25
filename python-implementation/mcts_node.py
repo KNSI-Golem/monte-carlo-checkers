@@ -14,7 +14,7 @@ class MCTSNode:
         self.prev_move = prev_move
         self.moves_not_taken = game_state.possible_moves
 
-    def get_ucb_score(self, explore_rate: float = math.sqrt(2)) -> float:
+    def get_ucb_score(self, explore_rate: float = 1 / math.sqrt(2)) -> float:
         if self.visit_count == 0:
             return math.inf
         return self.q_value / self.visit_count + explore_rate * math.sqrt(math.log(self.parent_node.visit_count) /
