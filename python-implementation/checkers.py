@@ -2,10 +2,11 @@ from game_state import GameState
 from game_simulation import GameSimulation
 
 
+
 class Checkers(GameSimulation):
     """
     BIG QUESTION - multimoves are possible in a game of checkers, when
-    leaping over multiple pieces in succession. 
+    leaping over multiple pieces in succession.
     Should we store this a single move, or rather as a sequence?
     """
 
@@ -16,7 +17,7 @@ class Checkers(GameSimulation):
         """
         pass
 
-    def get_moves(self, game_state: GameState) -> list[GameState]:
+    def get_moves(self, game_state: GameState) -> list[str]:
         pass
 
     def make_move(self, game_state: GameState, move: str) -> GameState:
@@ -24,6 +25,8 @@ class Checkers(GameSimulation):
 
     def make_random_move(self, game_state: GameState) -> GameState:
         pass
+
+    def make_random_move(self, state: GameState) -> GameState:
 
     def get_starting_state(self) -> GameState:
         pass
