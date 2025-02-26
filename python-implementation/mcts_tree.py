@@ -1,5 +1,3 @@
-from copy import deepcopy
-
 from mcts_node import MCTSNode
 from game_state import GameState
 from game_simulation import GameSimulation
@@ -8,14 +6,11 @@ import numpy as np
 
 class MCTSTree:
     """
-    4 stages of MCTS:
-    1. selection - select node
-    2. expansion - add all of node's kids to tree
-    3. simulation - play `sims_per` games with random moves, save nr of wins and nr of attempts
-    4. backprop - backprop the nr of wins and attempts
+    Monte Carlo Tree Search is a method for finding optimal decision in a given game state.
+    This class provides methods for running algorithm in given game environment.
     """
 
-    def __init__(self, my_game: Checkers, explore_rate: float, iteration_limit: int) -> None:
+    def __init__(self, my_game: GameSimulation, explore_rate: float, iteration_limit: int) -> None:
         self.root = None
         self.my_game = my_game
         self.explore_rate = explore_rate
@@ -37,8 +32,8 @@ class MCTSTree:
         for _ in range(self.iteration_limit):
             node = self._selection(self.root)
             node = self._expansion(node)
-            self._simulation(node)
-            self._backprop(node)
+            reward = self._simulation(node)
+            self._backprop(node, reward)
 
     def _selection(self, current_node: MCTSNode) -> MCTSNode:
         while len(current_node.moves_not_taken) == 0 and not current_node.is_terminal():
@@ -54,7 +49,7 @@ class MCTSTree:
         leaf_node.children_nodes.append(new_node)
         return new_node
 
-    def _simulation(self, start_node: MCTSNode) -> None:
+    def _simulation(self, start_node: MCTSNode) -> int:
         new_state = start_node
 
         while not new_state.is_terminal():
