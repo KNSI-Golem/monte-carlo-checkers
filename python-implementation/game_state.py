@@ -17,11 +17,3 @@ class GameState:
     """
     board_state: str = None  # how do we want to store these?
     active_player: str = None  # B or W
-    possible_moves: list[str] = None
-    terminated: bool = False
-
-    def is_terminal(self):
-        return self.terminated
-
-    def get_reward(self):
-        pass

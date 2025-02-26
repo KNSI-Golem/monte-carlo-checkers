@@ -50,16 +50,16 @@ class MCTSTree:
         return new_node
 
     def _simulation(self, start_node: MCTSNode) -> int:
-        new_state = start_node
+        new_state = start_node.game_state
 
-        while not new_state.is_terminal():
-            new_state = self.my_game.make_random_move(new_state)
+        while not self.my_game.is_terminal(new_state):
+            new_node = self.my_game.make_random_move(new_state)
 
-        reward = new_state.get_reward()
+        simulation_result = self.my_game.reward(new_node.game_state)
 
-        return reward
+        return simulation_result
 
-    def _backprop(self, leaf_node: MCTSNode, reward: 1 | 0 | -1) -> None:
+    def _backprop(self, leaf_node: MCTSNode, reward: int = 1 | 0 | -1) -> None:
         while leaf_node.parent_node is not None:
             leaf_node.visit_count += 1
             leaf_node.q_value += reward
@@ -69,4 +69,3 @@ class MCTSTree:
     def _get_best_child(self) -> MCTSNode:
         root_children = [child for child in self.root.children_nodes]
         return max(root_children, key=lambda x: x.q_value / x.visit_count)
-
