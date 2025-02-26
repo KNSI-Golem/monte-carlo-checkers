@@ -71,7 +71,7 @@ class MCTSTree:
         while True:
             leaf_node.visit_count += 1
             leaf_node.q_value += reward
-            reward = -reward
+            # reward = -reward
             if leaf_node.parent_node is None:
                 return
             leaf_node = leaf_node.parent_node

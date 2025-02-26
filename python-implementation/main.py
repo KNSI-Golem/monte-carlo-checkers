@@ -5,7 +5,7 @@ import os
 
 def main():
     ttt = Game()
-    mcts = MCTS(ttt, 0.7, 800)
+    mcts = MCTS(ttt, 1.41, 10000)
 
     # start game
     next_state = ttt.get_starting_state()

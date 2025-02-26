@@ -104,13 +104,3 @@ class TicTacToe(GameSimulation):
             s3 = " " if row[2].value == 0 else "X" if row[2].value == 1 else "O"
             rows.append(f" │ {row_index+1} │ {s1} │ {s2} │ {s3} │\n")
         print(top + legend + spacer + rows[0] + spacer + rows[1] + spacer + rows[2] + bot)
-
-
-if __name__ == "__main__":
-    game = TicTacToe(3)
-    # start = game.get_starting_state()
-    # # first_move = game.make_random_move(start)
-    # start.board[0] = BoardSlot(1)
-    # start.board[1] = BoardSlot(1)
-    # start.board[2] = BoardSlot(1)
-    # print(game.is_terminal(start))
