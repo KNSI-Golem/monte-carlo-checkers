@@ -80,7 +80,7 @@ class TicTacToe(GameSimulation):
         """
         index = int(move)
         game_state.board[index] = BoardSlot(game_state.active_player.value)
-        game_state.active_player = Move(game_state.active_player.value*-1)
+        game_state.active_player = Player(game_state.active_player.value*-1)
         return game_state
 
     def make_random_move(self, game_state: GameState) -> GameState:

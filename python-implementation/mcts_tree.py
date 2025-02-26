@@ -59,9 +59,9 @@ class MCTSTree:
         new_state = start_node.game_state
 
         while not self.game.is_terminal(new_state):
-            new_node = self.game.make_random_move(new_state)
+            new_state = self.game.make_random_move(new_state)
 
-        simulation_result = self.game.reward(new_node.game_state)
+        simulation_result = self.game.reward(new_state)
         return simulation_result
 
     def _backprop(self, leaf_node: MCTSNode, reward: int = 1 | 0 | -1) -> None:
