@@ -84,3 +84,8 @@ class MCTSTree:
     def _get_best_child(self) -> MCTSNode:
         root_children = [child for child in self.root.children_nodes]
         return max(root_children, key=lambda x: x.q_value / x.visit_count)
+
+    def get_move_probs(self) -> str:
+        sorted_kids = sorted(self.root.children_nodes, key=lambda x: int(x.prev_move))
+        lst = [f"{child.prev_move} {child.q_value/child.visit_count:.3}" for child in sorted_kids]
+        return " ".join(lst) + '\n'
