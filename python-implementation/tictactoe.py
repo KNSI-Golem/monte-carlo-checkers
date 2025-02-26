@@ -1,5 +1,6 @@
 from enum import Enum
-from game_simulation import GameSimulation, GameState
+from game_simulation import GameSimulation
+from game_state import GameState, Move
 import numpy as np
 
 
@@ -9,24 +10,21 @@ class BoardSlot(Enum):
     EMPTY = 0
 
 
-class Move(Enum):
+class Player(Enum):
     CROSS = 1
     CIRCLE = -1
 
 
-class TicTacToe(GameSimulation):
-    class GameState(GameState):
-        def __init__(self, board_state: list[BoardSlot], active_player: Move, game):
-            self.board_state = board_state
-            self.active_player = active_player
-            moves = game.get_moves(self)  # awful fr
-            return super().__init__(board_state, active_player, moves)
+class GameState(GameState):
+    def __init__(self, board: list[BoardSlot], active_player: Player):
+        self.board = board
+        self.active_player = active_player
 
+
+class TicTacToe(GameSimulation):
     def __init__(self, board_size: int = 3) -> None:
         self.board_size = board_size
-
         self._indexes = dict()
-
         self._calucalte_checking_indexes()
 
     def _calucalte_checking_indexes(self):
@@ -37,63 +35,68 @@ class TicTacToe(GameSimulation):
             [[x+y*self.board_size for x in range(self.board_size) if x+y == self.board_size-1][0] for y in range(self.board_size)]
         ]
 
-    def is_terminal(self, game_state: GameState) -> int | None:
+    def reward(self, game_state: GameState) -> int | None:
         # check rows
         for row in self._indexes['rows']:
-            row_sum = sum([game_state.board_state[slot_index].value for slot_index in row])
+            row_sum = sum([game_state.board[slot_index].value for slot_index in row])
             if (abs(row_sum) == self.board_size):
-                return Move(np.sign(row_sum))
+                return np.sign(row_sum)
 
         # check columns
         for column in self._indexes['columns']:
-            column_sum = sum([game_state.board_state[slot_index].value for slot_index in column])
+            column_sum = sum([game_state.board[slot_index].value for slot_index in column])
             if (abs(column_sum) == self.board_size):
-                return Move(np.sign(column_sum))
+                return np.sign(column_sum)
 
         # check diagonals
         for diagonal in self._indexes['diagonals']:
-            diagonal_sum = sum([game_state.board_state[slot_index].value for slot_index in diagonal])
+            diagonal_sum = sum([game_state.board[slot_index].value for slot_index in diagonal])
             if (abs(diagonal_sum) == self.board_size):
-                return Move(np.sign(diagonal_sum))
+                return np.sign(diagonal_sum)
 
         # check if there are empty slots, if so -> no winner but game still goes on
-        for slot in game_state.board_state:
+        for slot in game_state.board:
             if slot == BoardSlot.EMPTY:
                 return None
 
         # draw
-        return 0  # we kinda return trash, but its fine
+        return 0
 
-    def get_moves(self, game_state: GameState) -> list[str]:
+    def is_terminal(self, game_state: GameState) -> bool:
+        if self.reward(game_state) is None:
+            return False
+        return True
+
+    def get_moves(self, game_state: GameState) -> list[Move]:
         successors = []
         for index in range(self.board_size**2):
-            if game_state.board_state[index] == BoardSlot.EMPTY:
+            if game_state.board[index] == BoardSlot.EMPTY:
                 successors.append(f"{index}")
         return successors
 
-    def make_move(self, game_state: GameState, move: str) -> GameState:
+    def make_move(self, game_state: GameState, move: Move) -> GameState:
         """
         Make a move without checking the move correctness.
         """
         index = int(move)
-        game_state.board_state[index] = BoardSlot(game_state.active_player.value)
+        game_state.board[index] = BoardSlot(game_state.active_player.value)
         game_state.active_player = Move(game_state.active_player.value*-1)
-        game_state.possible_moves = self.get_moves(game_state)
         return game_state
 
     def make_random_move(self, game_state: GameState) -> GameState:
-        move_index = np.random.randint(0, len(game_state.possible_moves))
-        return self.make_move(game_state, game_state.possible_moves[move_index])
+        possible_moves = self.get_moves(game_state)
+        move_index = np.random.randint(0, len(possible_moves))
+        return self.make_move(game_state, possible_moves[move_index])
 
     def get_starting_state(self) -> GameState:
-        return TicTacToe.GameState([BoardSlot(0) for _ in range(self.board_size**2)], Move(-1), self)
+        return GameState([BoardSlot(0) for _ in range(self.board_size**2)], Player(-1))
 
 
 if __name__ == "__main__":
     game = TicTacToe(3)
     start = game.get_starting_state()
     # first_move = game.make_random_move(start)
-    start.board_state[0] = BoardSlot(1)
-    start.board_state[1] = BoardSlot(1)
-    start.board_state[2] = BoardSlot(1)
+    start.board[0] = BoardSlot(1)
+    start.board[1] = BoardSlot(1)
+    start.board[2] = BoardSlot(1)
     print(game.is_terminal(start))

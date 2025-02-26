@@ -1,4 +1,4 @@
-from game_state import GameState
+from game_state import GameState, Move
 from game_simulation import GameSimulation
 
 
@@ -10,20 +10,19 @@ class Checkers(GameSimulation):
     """
 
     def is_terminal(self, game_state: GameState) -> bool:
-        """
-        Returns name of Player ('B' or 'W') who won the game, if one won the game.
-        If game isn't over, returns None.
-        """
         pass
 
-    def get_moves(self, game_state: GameState) -> list[str]:
+    def get_moves(self, game_state: GameState) -> list[Move]:
         pass
 
-    def make_move(self, game_state: GameState, move: str) -> GameState:
+    def make_move(self, game_state: GameState, move: Move) -> GameState:
         pass
 
     def make_random_move(self, game_state: GameState) -> GameState:
         pass
 
     def get_starting_state(self) -> GameState:
+        pass
+
+    def reward(self) -> int:
         pass

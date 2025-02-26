@@ -1,5 +1,5 @@
 from mcts_node import MCTSNode
-from game_state import GameState
+from game_state import GameState, Move
 from game_simulation import GameSimulation
 import numpy as np
 
@@ -10,20 +10,20 @@ class MCTSTree:
     This class provides methods for running algorithm in given game environment.
     """
 
-    def __init__(self, my_game: GameSimulation, explore_rate: float, iteration_limit: int) -> None:
+    def __init__(self, game: GameSimulation, explore_rate: float, iteration_limit: int) -> None:
         self.root = None
-        self.my_game = my_game
+        self.game = game
         self.explore_rate = explore_rate
         self.iteration_limit = iteration_limit
 
-    def mcts_search(self, init_state: GameState) -> str:
+    def mcts_search(self, init_state: GameState) -> Move:
         """
         Implementation of basic algorithm that involves building a search tree
         until predefined computational budget - time.
         :param init_state: current game state
         :return: action that leads to the best child of init_state
         """
-        self.root = MCTSNode(init_state)
+        self.root = MCTSNode(init_state, self.game.get_moves(init_state))
         self._run_mcts()
         best_child = self._get_best_child()
         return best_child.prev_move
@@ -31,32 +31,37 @@ class MCTSTree:
     def _run_mcts(self) -> None:
         for _ in range(self.iteration_limit):
             node = self._selection(self.root)
-            node = self._expansion(node)
             reward = self._simulation(node)
             self._backprop(node, reward)
 
     def _selection(self, current_node: MCTSNode) -> MCTSNode:
-        while len(current_node.moves_not_taken) == 0 and not current_node.is_terminal():
+        while not self.game.is_terminal(current_node.game_state):
+            if len(current_node.moves_not_taken) != 0:
+                return self._expansion(current_node)
+
             ucb_scores = [node.get_ucb_score() for node in current_node.children_nodes]
             max_score_index = np.argmax(ucb_scores)[0]
             current_node = current_node.children_nodes[max_score_index]
+
         return current_node
 
     def _expansion(self, leaf_node: MCTSNode) -> MCTSNode:
         move_index = np.random.randint(0, len(leaf_node.moves_not_taken))
         move = leaf_node.moves_not_taken.pop(move_index)
-        new_node = MCTSNode(self.my_game.make_move(leaf_node.game_state, move), parent_node=leaf_node, prev_move=move)
+
+        new_game_state = self.game.make_move(leaf_node.game_state, move)
+        new_node = MCTSNode(new_game_state, self.game.get_moves(new_game_state), move, leaf_node)
+
         leaf_node.children_nodes.append(new_node)
-        return new_node
+        return new_node  # debug and see if memory layout is ok, ie. if leaf_node.children...[-1] return isn't needed
 
     def _simulation(self, start_node: MCTSNode) -> int:
         new_state = start_node.game_state
 
-        while not self.my_game.is_terminal(new_state):
-            new_node = self.my_game.make_random_move(new_state)
+        while not self.game.is_terminal(new_state):
+            new_node = self.game.make_random_move(new_state)
 
-        simulation_result = self.my_game.reward(new_node.game_state)
-
+        simulation_result = self.game.reward(new_node.game_state)
         return simulation_result
 
     def _backprop(self, leaf_node: MCTSNode, reward: int = 1 | 0 | -1) -> None:
