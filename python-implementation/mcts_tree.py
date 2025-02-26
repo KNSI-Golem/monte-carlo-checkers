@@ -2,6 +2,7 @@ from mcts_node import MCTSNode
 from game_state import GameState, Move
 from game_simulation import GameSimulation
 import numpy as np
+from copy import deepcopy
 
 
 class MCTSTree:
@@ -23,7 +24,7 @@ class MCTSTree:
         :param init_state: current game state
         :return: action that leads to the best child of init_state
         """
-        self.root = MCTSNode(init_state, self.game.get_moves(init_state))
+        self.root = MCTSNode(deepcopy(init_state), self.game.get_moves(init_state))
         self._run_mcts()
         best_child = self._get_best_child()
         return best_child.prev_move
@@ -40,7 +41,7 @@ class MCTSTree:
                 return self._expansion(current_node)
 
             ucb_scores = [node.get_ucb_score() for node in current_node.children_nodes]
-            max_score_index = np.argmax(ucb_scores)[0]
+            max_score_index = np.argmax(ucb_scores)
             current_node = current_node.children_nodes[max_score_index]
 
         return current_node
@@ -49,7 +50,7 @@ class MCTSTree:
         move_index = np.random.randint(0, len(leaf_node.moves_not_taken))
         move = leaf_node.moves_not_taken.pop(move_index)
 
-        new_game_state = self.game.make_move(leaf_node.game_state, move)
+        new_game_state = self.game.make_move(deepcopy(leaf_node.game_state), move)
         new_node = MCTSNode(new_game_state, self.game.get_moves(new_game_state), move, leaf_node)
 
         leaf_node.children_nodes.append(new_node)
@@ -65,10 +66,12 @@ class MCTSTree:
         return simulation_result
 
     def _backprop(self, leaf_node: MCTSNode, reward: int = 1 | 0 | -1) -> None:
-        while leaf_node.parent_node is not None:
+        while True:
             leaf_node.visit_count += 1
             leaf_node.q_value += reward
             reward = -reward
+            if leaf_node.parent_node is None:
+                return
             leaf_node = leaf_node.parent_node
 
     def _get_best_child(self) -> MCTSNode:
