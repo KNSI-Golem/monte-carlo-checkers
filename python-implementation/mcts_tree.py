@@ -26,6 +26,8 @@ class MCTSTree:
         """
         self.root = MCTSNode(deepcopy(init_state), self.game.get_moves(init_state))
         self._run_mcts()
+        for child in self.root.children_nodes:
+            print(f"{child.prev_move} {child.get_ucb_score()}")
         best_child = self._get_best_child()
         return best_child.prev_move
 
@@ -57,7 +59,7 @@ class MCTSTree:
         return new_node  # debug and see if memory layout is ok, ie. if leaf_node.children...[-1] return isn't needed
 
     def _simulation(self, start_node: MCTSNode) -> int:
-        new_state = start_node.game_state
+        new_state = deepcopy(start_node.game_state)
 
         while not self.game.is_terminal(new_state):
             new_state = self.game.make_random_move(new_state)

@@ -4,10 +4,6 @@ import math
 
 
 class MCTSNode:
-    children_nodes: list[MCTSNode] = []
-    visit_count: int = 0
-    q_value: int = 0
-
     def __init__(self,
                  game_state: GameState,
                  possible_state_moves: list[Move],
@@ -19,6 +15,10 @@ class MCTSNode:
         self.parent_node = parent_node
         self.prev_move = prev_move  # move that was taken in order to get from parent node to this node. None when root node
         self.moves_not_taken = possible_state_moves
+
+        self.children_nodes: list[MCTSNode] = []
+        self.visit_count: int = 0
+        self.q_value: int = 0
 
     def get_ucb_score(self, explore_rate: float = 1 / math.sqrt(2)) -> float:
         if self.visit_count == 0:

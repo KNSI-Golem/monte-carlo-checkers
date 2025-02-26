@@ -89,14 +89,28 @@ class TicTacToe(GameSimulation):
         return self.make_move(game_state, possible_moves[move_index])
 
     def get_starting_state(self) -> GameState:
-        return GameState([BoardSlot(0) for _ in range(self.board_size**2)], Player(-1))
+        return GameState([BoardSlot(0) for _ in range(self.board_size**2)], Player(1))
+
+    def print_board(self, game_state: GameState) -> None:
+        top = " ┌───┬───┬───┬───┐\n"
+        legend = " │y\\x│ 1 │ 2 │ 3 │\n"
+        spacer = " ├───┼───┼───┼───┤\n"
+        bot = " └───┴───┴───┴───┘\n"
+        rows = []
+        square_triplets = [game_state.board[i:i+3] for i in range(0, len(game_state.board), 3)]
+        for row_index, row in enumerate(square_triplets):
+            s1 = " " if row[0].value == 0 else "X" if row[0].value == 1 else "O"
+            s2 = " " if row[1].value == 0 else "X" if row[1].value == 1 else "O"
+            s3 = " " if row[2].value == 0 else "X" if row[2].value == 1 else "O"
+            rows.append(f" │ {row_index+1} │ {s1} │ {s2} │ {s3} │\n")
+        print(top + legend + spacer + rows[0] + spacer + rows[1] + spacer + rows[2] + bot)
 
 
 if __name__ == "__main__":
     game = TicTacToe(3)
-    start = game.get_starting_state()
-    # first_move = game.make_random_move(start)
-    start.board[0] = BoardSlot(1)
-    start.board[1] = BoardSlot(1)
-    start.board[2] = BoardSlot(1)
-    print(game.is_terminal(start))
+    # start = game.get_starting_state()
+    # # first_move = game.make_random_move(start)
+    # start.board[0] = BoardSlot(1)
+    # start.board[1] = BoardSlot(1)
+    # start.board[2] = BoardSlot(1)
+    # print(game.is_terminal(start))
