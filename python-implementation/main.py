@@ -2,23 +2,24 @@ from mcts_tree import MCTSTree as MCTS
 from tictactoe import TicTacToe as Game
 from tictactoe import Player
 from tqdm import tqdm
+from collections import Counter
 
 import os
 ttt = Game()
-mcts1 = MCTS(ttt, 1, 1000)
-mcts2 = MCTS(ttt, 1, 1000)
+mcts1 = MCTS(ttt, 1, 800)
+mcts2 = MCTS(ttt, 1, 800)
 
 def run_sim():
     game_state = ttt.get_starting_state()
     while (True):
         move = mcts1.mcts_search(game_state)
         game_state = ttt.make_move(game_state, move)
-        ttt.print_board(game_state)
+        # ttt.print_board(game_state)
         if (ttt.is_terminal(game_state)):
             return ttt.reward(game_state, Player.CROSS)
         move = mcts2.mcts_search(game_state)
         game_state = ttt.make_move(game_state, move)
-        ttt.print_board(game_state)
+        # ttt.print_board(game_state)
         if (ttt.is_terminal(game_state)):
             return ttt.reward(game_state, Player.CROSS)
 
@@ -41,7 +42,6 @@ def main():
     outcomes = []
     for _ in tqdm(range(1000)):
         outcomes.append(run_sim())
-    print(outcomes)
-
+    print(Counter(outcomes))
 if __name__ == "__main__":
     main()
