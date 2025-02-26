@@ -35,24 +35,23 @@ class TicTacToe(GameSimulation):
             [[x+y*self.board_size for x in range(self.board_size) if x+y == self.board_size-1][0] for y in range(self.board_size)]
         ]
 
-    def reward(self, game_state: GameState) -> int | None:
+    def reward(self, game_state: GameState, desired_winner: Player) -> int | None:
         # check rows
         for row in self._indexes['rows']:
             row_sum = sum([game_state.board[slot_index].value for slot_index in row])
             if (abs(row_sum) == self.board_size):
-                return np.sign(row_sum)
-
+                return 1 if (np.sign(row_sum) == desired_winner.value) else -1
         # check columns
         for column in self._indexes['columns']:
             column_sum = sum([game_state.board[slot_index].value for slot_index in column])
             if (abs(column_sum) == self.board_size):
-                return np.sign(column_sum)
+                return 1 if (np.sign(column_sum) == desired_winner.value) else -1
 
         # check diagonals
         for diagonal in self._indexes['diagonals']:
             diagonal_sum = sum([game_state.board[slot_index].value for slot_index in diagonal])
             if (abs(diagonal_sum) == self.board_size):
-                return np.sign(diagonal_sum)
+                return 1 if (np.sign(diagonal_sum) == desired_winner.value) else -1
 
         # check if there are empty slots, if so -> no winner but game still goes on
         for slot in game_state.board:
@@ -63,7 +62,7 @@ class TicTacToe(GameSimulation):
         return 0
 
     def is_terminal(self, game_state: GameState) -> bool:
-        if self.reward(game_state) is None:
+        if self.reward(game_state, Player.CIRCLE) is None:
             return False
         return True
 
@@ -89,7 +88,7 @@ class TicTacToe(GameSimulation):
         return self.make_move(game_state, possible_moves[move_index])
 
     def get_starting_state(self) -> GameState:
-        return GameState([BoardSlot(0) for _ in range(self.board_size**2)], Player(1))
+        return GameState([BoardSlot(0) for _ in range(self.board_size**2)], Player.CROSS)
 
     def print_board(self, game_state: GameState) -> None:
         top = " ┌───┬───┬───┬───┐\n"

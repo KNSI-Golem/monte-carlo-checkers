@@ -26,8 +26,8 @@ class MCTSTree:
         """
         self.root = MCTSNode(deepcopy(init_state), self.game.get_moves(init_state))
         self._run_mcts()
-        for child in self.root.children_nodes:
-            print(f"{child.prev_move} {child.get_ucb_score()}")
+        # for child in self.root.children_nodes:
+        #     print(f"{child.prev_move} {child.q_value/child.visit_count:.3}")
         best_child = self._get_best_child()
         return best_child.prev_move
 
@@ -64,14 +64,14 @@ class MCTSTree:
         while not self.game.is_terminal(new_state):
             new_state = self.game.make_random_move(new_state)
 
-        simulation_result = self.game.reward(new_state)
+        # self.game.print_board(new_state)
+        simulation_result = self.game.reward(new_state, self.root.game_state.active_player)
         return simulation_result
 
     def _backprop(self, leaf_node: MCTSNode, reward: int = 1 | 0 | -1) -> None:
         while True:
             leaf_node.visit_count += 1
             leaf_node.q_value += reward
-            # reward = -reward
             if leaf_node.parent_node is None:
                 return
             leaf_node = leaf_node.parent_node
