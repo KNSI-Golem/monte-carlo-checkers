@@ -5,8 +5,8 @@ from tqdm import tqdm
 
 import os
 ttt = Game()
-mcts1 = MCTS(ttt, 5, 1000)
-mcts2 = MCTS(ttt, 1.41, 10000)
+mcts1 = MCTS(ttt, 1, 1000)
+mcts2 = MCTS(ttt, 1, 1000)
 
 def run_sim():
     game_state = ttt.get_starting_state()
@@ -25,19 +25,21 @@ def run_sim():
 
 def main():
     # start game
-    # os.system("clear")
+    os.system("clear")
+    # game_state = ttt.get_starting_state()
 
     # while (True):
     #     # get mcts move
-    #     move = mcts.mcts_search(next_state)
 
+    #     move = mcts1.mcts_search(game_state)
     #     print(f"MCTS move: {move}")
-    #     ttt.print_board(next_state)
+    #     ttt.make_move(game_state, move)
+    #     ttt.print_board(game_state)
     #     player_move = input("Your Move: ")
     #     os.system("clear")
-    #     next_state = ttt.make_move(next_state, player_move)
+    #     game_state = ttt.make_move(game_state, player_move)
     outcomes = []
-    for _ in tqdm(range(15)):
+    for _ in tqdm(range(1000)):
         outcomes.append(run_sim())
     print(outcomes)
 

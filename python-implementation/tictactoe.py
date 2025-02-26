@@ -40,18 +40,18 @@ class TicTacToe(GameSimulation):
         for row in self._indexes['rows']:
             row_sum = sum([game_state.board[slot_index].value for slot_index in row])
             if (abs(row_sum) == self.board_size):
-                return 1 if (np.sign(row_sum) == desired_winner.value) else -1
+                return 1 if (np.sign(row_sum) == desired_winner.value) else 0
         # check columns
         for column in self._indexes['columns']:
             column_sum = sum([game_state.board[slot_index].value for slot_index in column])
             if (abs(column_sum) == self.board_size):
-                return 1 if (np.sign(column_sum) == desired_winner.value) else -1
+                return 1 if (np.sign(column_sum) == desired_winner.value) else 0
 
         # check diagonals
         for diagonal in self._indexes['diagonals']:
             diagonal_sum = sum([game_state.board[slot_index].value for slot_index in diagonal])
             if (abs(diagonal_sum) == self.board_size):
-                return 1 if (np.sign(diagonal_sum) == desired_winner.value) else -1
+                return 1 if (np.sign(diagonal_sum) == desired_winner.value) else 0
 
         # check if there are empty slots, if so -> no winner but game still goes on
         for slot in game_state.board:
@@ -59,7 +59,7 @@ class TicTacToe(GameSimulation):
                 return None
 
         # draw
-        return 0
+        return 0.5
 
     def is_terminal(self, game_state: GameState) -> bool:
         if self.reward(game_state, Player.CIRCLE) is None:
