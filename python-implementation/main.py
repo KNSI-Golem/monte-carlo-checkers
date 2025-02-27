@@ -6,16 +6,16 @@ from collections import Counter
 
 # import os
 ttt = Game()
-mcts1 = MCTS(ttt, 1, 800)
-mcts2 = MCTS(ttt, 1, 800)
+mcts1 = MCTS(ttt, 0.7, 1600)
+mcts2 = MCTS(ttt, 0.7, 1600)
 moves = []
 move_probs = []
 
 
 def run_sim():
     game_state = ttt.get_starting_state()
-    moves.clear()
-    move_probs.clear()
+    moves = []
+    move_probs = []
     while (True):
         move = mcts1.mcts_search(game_state)
         moves.append(move)
@@ -23,17 +23,14 @@ def run_sim():
         game_state = ttt.make_move(game_state, move)
         # ttt.print_board(game_state)
         if (ttt.is_terminal(game_state)):
-            if (ttt.reward(game_state, Player.CIRCLE) != 0):
-                ttt.print_board(game_state)
-            return ttt.reward(game_state, Player.CROSS)
+            return ttt.reward(game_state, Player.CROSS), moves, move_probs
         move = mcts2.mcts_search(game_state)
+        move_probs.append([mcts2.get_move_probs()])
         moves.append(move)
         game_state = ttt.make_move(game_state, move)
         # ttt.print_board(game_state)
         if (ttt.is_terminal(game_state)):
-            if (ttt.reward(game_state, Player.CIRCLE) != 0):
-                ttt.print_board(game_state)
-            return ttt.reward(game_state, Player.CROSS)
+            return ttt.reward(game_state, Player.CROSS), moves, move_probs
 
 
 def main():
@@ -54,8 +51,8 @@ def main():
     #     os.system("clear")
     #     game_state = ttt.make_move(game_state, player_move)
     outcomes = []
-    for _ in tqdm(range(1000)):
-        val = run_sim()
+    for _ in tqdm(range(50)):
+        val, moves, move_probs = run_sim()
         outcomes.append(val)
         if val != 0:
             lost_game_moves.append(moves)
@@ -67,7 +64,6 @@ def main():
             f.write(" ".join(lost_game_moves[i]))
             f.write('\n')
             for c in range(len(lost_game_probs[i])):
-                print(lost_game_probs[i][c])
                 f.write("".join(lost_game_probs[i][c]))
         f.close()
 
