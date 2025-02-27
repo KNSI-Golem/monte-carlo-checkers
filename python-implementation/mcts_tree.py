@@ -3,6 +3,7 @@ from game_state import GameState, Move
 from game_simulation import GameSimulation
 import numpy as np
 from copy import deepcopy
+from multiprocessing import Process
 
 
 class MCTSTree:
@@ -11,11 +12,11 @@ class MCTSTree:
     This class provides methods for running algorithm in given game environment.
     """
 
-    def __init__(self, game: GameSimulation, explore_rate: float, iteration_limit: int) -> None:
+    def __init__(self, game: GameSimulation, explore_rate: float, time_limit: int) -> None:
         self.root = None
         self.game = game
         self.explore_rate = explore_rate
-        self.iteration_limit = iteration_limit
+        self.time_limit = time_limit    # time in seconds
 
     def mcts_search(self, init_state: GameState) -> Move:
         """
@@ -25,11 +26,17 @@ class MCTSTree:
         :return: action that leads to the best child of init_state
         """
         self.root = MCTSNode(deepcopy(init_state), self.game.get_moves(init_state))
-        self._run_mcts()
+
+        p = Process(target=self._run_mcts())
+        p.start()
+        p.join(self.time_limit)
+        if p.is_alive():
+            p.terminate()
+
         return self._get_best_child().prev_move
 
     def _run_mcts(self) -> None:
-        for _ in range(self.iteration_limit):
+        while True:
             node = self._selection(self.root)
             reward = self._simulation(node)
             self._backprop(node, reward)
