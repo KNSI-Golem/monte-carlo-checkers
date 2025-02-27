@@ -1,6 +1,5 @@
-from game_state import GameState
+from game_state import GameState, Move
 from game_simulation import GameSimulation
-
 
 
 class Checkers(GameSimulation):
@@ -10,23 +9,20 @@ class Checkers(GameSimulation):
     Should we store this a single move, or rather as a sequence?
     """
 
-    def is_terminal(self, game_state: GameState) -> str | None:
-        """
-        Returns name of Player ('B' or 'W') who won the game, if one won the game.
-        If game isn't over, returns None.
-        """
+    def is_terminal(self, game_state: GameState) -> bool:
         pass
 
-    def get_moves(self, game_state: GameState) -> list[str]:
+    def get_moves(self, game_state: GameState) -> list[Move]:
         pass
 
-    def make_move(self, game_state: GameState, move: str) -> GameState:
+    def make_move(self, game_state: GameState, move: Move) -> GameState:
         pass
 
     def make_random_move(self, game_state: GameState) -> GameState:
         pass
 
-    def make_random_move(self, state: GameState) -> GameState:
-
     def get_starting_state(self) -> GameState:
+        pass
+
+    def reward(self) -> int:
         pass
