@@ -8,4 +8,5 @@ class Player:
 
 
 class GameState:
-    pass
+    def __init__(self):
+        self.active_player = None

@@ -59,17 +59,13 @@ class TicTacToe(GameSimulation):
                 return 1 if (np.sign(row_sum) == desired_winner.value) else -1
         # check columns
         for column in self._indexes["columns"]:
-            column_sum = sum(
-                [game_state.board[slot_index].value for slot_index in column]
-            )
+            column_sum = sum([game_state.board[slot_index].value for slot_index in column])
             if abs(column_sum) == self.board_size:
                 return 1 if (np.sign(column_sum) == desired_winner.value) else -1
 
         # check diagonals
         for diagonal in self._indexes["diagonals"]:
-            diagonal_sum = sum(
-                [game_state.board[slot_index].value for slot_index in diagonal]
-            )
+            diagonal_sum = sum([game_state.board[slot_index].value for slot_index in diagonal])
             if abs(diagonal_sum) == self.board_size:
                 return 1 if (np.sign(diagonal_sum) == desired_winner.value) else -1
 
@@ -94,10 +90,9 @@ class TicTacToe(GameSimulation):
         return successors
 
     def make_move(self, game_state: GameState, move: Move) -> GameState:
-        """
-        Make a move without checking the move correctness.
-        """
         index = int(move)
+        if (game_state.board[index] != BoardSlot.EMPTY or index >= self.board_size**2):
+            raise Exception("invalid move")
         game_state.board[index] = BoardSlot(game_state.active_player.value)
         game_state.active_player = Player(game_state.active_player.value * -1)
         return game_state
@@ -108,9 +103,7 @@ class TicTacToe(GameSimulation):
         return self.make_move(game_state, possible_moves[move_index])
 
     def get_starting_state(self) -> GameState:
-        return GameState(
-            [BoardSlot(0) for _ in range(self.board_size**2)], Player.CROSS
-        )
+        return GameState([BoardSlot(0) for _ in range(self.board_size**2)], Player.CROSS)
 
     def print_board(self, game_state: GameState) -> None:
         top = " ┌───┬───┬───┬───┐\n"
@@ -119,7 +112,7 @@ class TicTacToe(GameSimulation):
         bot = " └───┴───┴───┴───┘\n"
         rows = []
         square_triplets = [
-            game_state.board[i : i + 3] for i in range(0, len(game_state.board), 3)
+            game_state.board[i: i + 3] for i in range(0, len(game_state.board), 3)
         ]
         for row_index, row in enumerate(square_triplets):
             s1 = " " if row[0].value == 0 else "X" if row[0].value == 1 else "O"

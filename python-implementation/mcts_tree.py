@@ -26,10 +26,7 @@ class MCTSTree:
         """
         self.root = MCTSNode(deepcopy(init_state), self.game.get_moves(init_state))
         self._run_mcts()
-        # for child in self.root.children_nodes:
-        #     print(f"{child.prev_move} {child.q_value/child.visit_count:.3}")
-        best_child = self._get_best_child()
-        return best_child.prev_move
+        return self._get_best_child().prev_move
 
     def _run_mcts(self) -> None:
         for _ in range(self.iteration_limit):
@@ -43,8 +40,7 @@ class MCTSTree:
                 return self._expansion(current_node)
 
             ucb_scores = [node.get_ucb_score() for node in current_node.children_nodes]
-            max_score_index = np.argmax(ucb_scores)
-            current_node = current_node.children_nodes[max_score_index]
+            current_node = current_node.children_nodes[np.argmax(ucb_scores)]
 
         return current_node
 
@@ -56,7 +52,7 @@ class MCTSTree:
         new_node = MCTSNode(new_game_state, self.game.get_moves(new_game_state), move, leaf_node)
 
         leaf_node.children_nodes.append(new_node)
-        return new_node  # debug and see if memory layout is ok, ie. if leaf_node.children...[-1] return isn't needed
+        return new_node
 
     def _simulation(self, start_node: MCTSNode) -> int:
         new_state = deepcopy(start_node.game_state)
@@ -64,9 +60,7 @@ class MCTSTree:
         while not self.game.is_terminal(new_state):
             new_state = self.game.make_random_move(new_state)
 
-        # self.game.print_board(new_state)
-        simulation_result = self.game.reward(new_state, self.root.game_state.active_player)
-        return simulation_result
+        return self.game.reward(new_state, self.root.game_state.active_player)
 
     def _backprop(self, leaf_node: MCTSNode, reward: int = 1 | 0 | -1) -> None:
         while True:
