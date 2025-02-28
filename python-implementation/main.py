@@ -8,14 +8,14 @@ from collections import Counter
 ttt = Game()
 mcts1 = MCTS(ttt, 0.7, 1600)
 mcts2 = MCTS(ttt, 0.7, 1600)
-moves = []
-move_probs = []
 
 
-def run_sim():
+def run_sim(explore: float, iterations: int):
     game_state = ttt.get_starting_state()
     moves = []
     move_probs = []
+    mcts1 = MCTS(ttt, explore, iterations)
+    mcts2 = MCTS(ttt, explore, iterations)
     while (True):
         move = mcts1.mcts_search(game_state)
         moves.append(move)
@@ -34,31 +34,20 @@ def run_sim():
 
 
 def main():
-    # start game
+
     os.system("clear")
     lost_game_moves = []
     lost_game_probs = []
-    # game_state = ttt.get_starting_state()
 
-    # while (True):
-    #     # get mcts move
-
-    #     move = mcts1.mcts_search(game_state)
-    #     print(f"MCTS move: {move}")
-    #     ttt.make_move(game_state, move)
-    #     ttt.print_board(game_state)
-    #     player_move = input("Your Move: ")
-    #     os.system("clear")
-    #     game_state = ttt.make_move(game_state, player_move)
     outcomes = []
-    for _ in tqdm(range(50)):
-        val, moves, move_probs = run_sim()
+    for _ in tqdm(range(5)):
+        val, moves, move_probs = run_sim(explore=0.7, iterations=1600)
         outcomes.append(val)
-        if val != 0:
+        if val == 0:
             lost_game_moves.append(moves)
             lost_game_probs.append(move_probs)
 
-    with open("log.txt", 'w') as f:
+    with open("test_log.txt", 'w') as f:
         for i in range(len(lost_game_moves)):
             f.write(f"#### Lost game nr {i+1}\n")
             f.write(" ".join(lost_game_moves[i]))
