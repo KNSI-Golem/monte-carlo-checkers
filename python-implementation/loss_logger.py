@@ -4,10 +4,8 @@ from tictactoe import Player
 from tqdm import tqdm
 from collections import Counter
 
-# import os
+import os
 ttt = Game()
-mcts1 = MCTS(ttt, 0.7, 1600)
-mcts2 = MCTS(ttt, 0.7, 1600)
 
 
 def run_sim(explore: float, iterations: int):
