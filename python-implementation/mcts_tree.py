@@ -3,6 +3,7 @@ from game_state import GameState, Move
 from game_simulation import GameSimulation
 import numpy as np
 from copy import deepcopy
+from multiprocessing import Process, Manager
 
 
 class MCTSTree:
@@ -11,11 +12,11 @@ class MCTSTree:
     This class provides methods for running algorithm in given game environment.
     """
 
-    def __init__(self, game: GameSimulation, explore_rate: float, iteration_limit: int) -> None:
+    def __init__(self, game: GameSimulation, explore_rate: float, time_limit: float) -> None:
         self.root = None
         self.game = game
         self.explore_rate = explore_rate
-        self.iteration_limit = iteration_limit
+        self.time_limit = time_limit    # time in seconds
 
     def mcts_search(self, init_state: GameState) -> Move:
         """
@@ -24,15 +25,27 @@ class MCTSTree:
         :param init_state: current game state
         :return: action that leads to the best child of init_state
         """
-        self.root = MCTSNode(deepcopy(init_state), self.game.get_moves(init_state))
-        self._run_mcts()
-        return self._get_best_child().prev_move
+        with Manager() as manager:
+            
+            global_data = manager.Namespace()
+            global_data.best_move = ""
 
-    def _run_mcts(self) -> None:
-        for _ in range(self.iteration_limit):
+            self.root = MCTSNode(deepcopy(init_state), self.game.get_moves(init_state))
+
+            p = Process(target=self._run_mcts, args=(global_data, ))
+            p.start()
+            p.join(self.time_limit)
+            if p.is_alive():
+                p.terminate()
+
+            return global_data.best_move
+
+    def _run_mcts(self, global_data) -> None:
+        while True:
             node = self._selection(self.root)
             reward = self._simulation(node)
             self._backprop(node, reward)
+            global_data.best_move = self._get_best_child().prev_move
 
     def _selection(self, current_node: MCTSNode) -> MCTSNode:
         while not self.game.is_terminal(current_node.game_state):
@@ -77,3 +90,8 @@ class MCTSTree:
     def _get_best_child(self) -> MCTSNode:
         root_children = [child for child in self.root.children_nodes]
         return max(root_children, key=lambda x: x.q_value / x.visit_count)
+
+    def get_move_probs(self) -> str:
+        sorted_kids = sorted(self.root.children_nodes, key=lambda x: int(x.prev_move))
+        lst = [f"{child.prev_move} {child.q_value/child.visit_count:.3}" for child in sorted_kids]
+        return " ".join(lst) + '\n'
