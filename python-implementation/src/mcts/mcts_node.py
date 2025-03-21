@@ -1,7 +1,7 @@
 from __future__ import annotations
-from game_state import GameState, Move
 import math
 
+from ..interfaces import GameState, Move
 
 class MCTSNode:
     def __init__(self,
@@ -13,7 +13,8 @@ class MCTSNode:
 
         self.game_state = game_state
         self.parent_node = parent_node
-        self.prev_move = prev_move  # move that was taken in order to get from parent node to this node. None when root node
+        # move that was taken in order to get from parent node to this node. None when root node
+        self.prev_move = prev_move  
         self.moves_not_taken = possible_state_moves
 
         self.children_nodes: list[MCTSNode] = []

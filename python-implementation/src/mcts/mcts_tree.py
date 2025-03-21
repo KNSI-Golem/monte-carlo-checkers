@@ -1,9 +1,9 @@
-from mcts_node import MCTSNode
-from game_state import GameState, Move
-from game_simulation import GameSimulation
 import numpy as np
 from copy import deepcopy
 from multiprocessing import Process, Manager
+
+from .mcts_node import MCTSNode
+from ..interfaces import GameState, Move, GameSimulation
 
 
 class MCTSTree:
