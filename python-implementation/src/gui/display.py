@@ -45,8 +45,9 @@ class Display:
                     piece = pieces[indx]
                     if piece != CheckersPiece.EMPTY:
                         img = self._get_piece_image(piece)
-                        img = pygame.transform.scale(img, (self.square_size, self.square_size))
-                        self.screen.blit(img, (i * self.square_size, j * self.square_size))
+                        img = pygame.transform.scale(img, (0.75*self.square_size, 0.75*self.square_size))
+                        x_pad, y_pad = self._calculate_padding(img, self.square_size, self.square_size)
+                        self.screen.blit(img, (i * self.square_size + x_pad, j * self.square_size + y_pad))
                     
 
     def _init_screen(self, width, height):
@@ -55,3 +56,10 @@ class Display:
         return screen
 
 
+    def _calculate_padding(self, img, new_width, new_height):
+        img_width, img_height = img.get_width(), img.get_height()
+        target_width = int(0.75 * self.square_size)
+        target_height = int(0.75 * self.square_size)
+        x_pad = (self.square_size - target_width) // 2
+        y_pad = (self.square_size - target_height) // 2
+        return x_pad, y_pad
