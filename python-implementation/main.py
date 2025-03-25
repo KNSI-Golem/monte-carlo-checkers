@@ -6,6 +6,8 @@ from time import sleep
 from copy import deepcopy
 from collections import Counter
 
+
+from src.gui import Display, start_game
 from src.mcts import MCTSTree as MCTS
 from src.checkers import (
     Checkers,
@@ -91,7 +93,9 @@ def mcts_vs_random():
         print(f"Random move: {move}")
         sleep(2)
 
-
+def play_interactivly():
+    display = Display(800, 800)
+    start_game(display)
 
 def main():
     ## outcomes = []
@@ -100,7 +104,8 @@ def main():
     # print(Counter(outcomes))
 
     # play_versus_mcts()
-    mcts_vs_random()
-
+    # mcts_vs_random()
+    play_interactivly()
+    
 if __name__ == "__main__":
     main()
