@@ -77,3 +77,5 @@ Basic Python libraries like pytest are already included in the requirements.
     └── other                   <- Leftover files from earlier stages
 ```
 
+## Credits
+- ['mrserji'](https://mrserji.itch.io/) for their checkers assets  
