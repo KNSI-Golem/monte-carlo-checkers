@@ -86,7 +86,8 @@ class CheckersBoard(GameState):
         for new_indx, direction_id in zip(self.get_closest_indexes(indx), range(4)):
 
             while (
-                new_indx is not None and self.get_piece(new_indx) == CheckersPiece.EMPTY
+                new_indx is not None and self.get_piece(
+                    new_indx) == CheckersPiece.EMPTY
             ):
                 all_indxs.append(new_indx)
                 new_indx = self.get_closest_index(new_indx, direction_id)
