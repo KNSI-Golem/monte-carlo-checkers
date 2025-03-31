@@ -45,8 +45,10 @@ class PygameCheckers:
                     self.handle_ai_turn()
                     result = True
                 player_turn = not player_turn if result else player_turn
+        self.display.draw_board(self.state)
+        pygame.display.update()
 
-        pygame.quit()
+        self.show_restart_button()
 
     def handle_player_turn(self) -> None:
         """Handles the player's turn, allowing them to make a move."""
@@ -125,3 +127,32 @@ class PygameCheckers:
             self.display.draw_board(fake_state)
             pygame.display.update()
             pygame.time.wait(500)
+
+    def show_restart_button(self):
+        """Displays a restart button at the end of the game."""
+        font = pygame.font.Font(None, 36)
+        button_rect = pygame.Rect(150, 300, 200, 50)
+        button_color = (0, 128, 0)
+        text_color = (255, 255, 255)
+        text = font.render("Restart Game", True, text_color)
+        text_rect = text.get_rect(center=button_rect.center)
+
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if button_rect.collidepoint(event.pos):
+                        self.restart_game()
+
+            self.display.draw_board(self.state)
+            pygame.draw.rect(self.display.screen, button_color, button_rect)
+            self.display.screen.blit(text, text_rect)
+            pygame.display.update()
+
+    def restart_game(self):
+        """Restarts the game."""
+        self.state = self.game.get_starting_state()
+        self.xy_selected = None
+        self.play_game()
