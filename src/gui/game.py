@@ -63,7 +63,8 @@ class PygameCheckers:
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = pygame.mouse.get_pos()
-                x, y = x // self.display.square_size, y // self.display.square_size
+                x = (x - self.display.offset_x) // self.display.square_size
+                y = (y - self.display.offset_y) // self.display.square_size
                 xy_current = (x, y)
 
                 if self.xy_selected is not None:
@@ -131,7 +132,10 @@ class PygameCheckers:
     def show_restart_button(self):
         """Displays a restart button at the end of the game."""
         font = pygame.font.Font(None, 36)
-        button_rect = pygame.Rect(150, 300, 200, 50)
+        button_rect = pygame.Rect(self.display.width // 2 - 100,
+                                  self.display.height // 2 - 50,
+                                  200, 100,
+                                  )
         button_color = (0, 128, 0)
         text_color = (255, 255, 255)
         text = font.render("Restart Game", True, text_color)
@@ -141,7 +145,7 @@ class PygameCheckers:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                    sys.exit()
+
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if button_rect.collidepoint(event.pos):
                         self.restart_game()

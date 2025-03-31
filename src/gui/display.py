@@ -7,9 +7,11 @@ class Display:
     def __init__(self, width: int, height: int):
         self.width = width
         self.height = height
-        self.square_size = width // 8 if width < height else height // 8
+        self.square_size = min(self.width, self.height) // 8
         self.highlighted_square = None
-        self.screen = self._init_screen(width, height)
+        self.screen = self._init_screen(self.width, self.height)
+        self.offset_x = (self.width - self.square_size * 8) // 2
+        self.offset_y = (self.height - self.square_size * 8) // 2
 
     def _load_image(self, image_name: str) -> pygame.image:
         image_path = pkg_resources.resource_filename(
@@ -32,22 +34,25 @@ class Display:
     def draw_board(self, state: CheckersState) -> None:
         self.screen.fill((0, 0, 0))
         pieces = state.get_board().get_squares()
+
         for j in range(8):
             for i in range(8):
                 if (i, j) == self.highlighted_square:
-                    color = ((255, 0, 0),)
+                    color = (255, 0, 0)
                 else:
                     color = (255, 255, 255) if (i + j) % 2 != 0 else (0, 0, 0)
+
                 pygame.draw.rect(
                     self.screen,
                     color,
                     (
-                        i * self.square_size,
-                        j * self.square_size,
+                        self.offset_x + i * self.square_size,
+                        self.offset_y + j * self.square_size,
                         self.square_size,
                         self.square_size,
                     ),
                 )
+
                 if i % 2 != j % 2:
                     indx = j * 4 + i // 2
                     piece = pieces[indx]
@@ -58,13 +63,12 @@ class Display:
                                   0.75 * self.square_size)
                         )
                         x_pad, y_pad = self._calculate_padding(
-                            self.square_size, self.square_size
-                        )
+                            self.square_size, self.square_size)
                         self.screen.blit(
                             img,
                             (
-                                i * self.square_size + x_pad,
-                                j * self.square_size + y_pad,
+                                self.offset_x + i * self.square_size + x_pad,
+                                self.offset_y + j * self.square_size + y_pad,
                             ),
                         )
 
@@ -72,7 +76,7 @@ class Display:
         self.highlighted_square = cords
 
     def _init_screen(self, width: int, height: int) -> pygame.Surface:
-        screen = pygame.display.set_mode((width, height))
+        screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
         pygame.display.set_caption("Golemowe Warcaby")
         return screen
 
