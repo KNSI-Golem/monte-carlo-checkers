@@ -1,8 +1,9 @@
 import pygame
 from enum import Enum
+from copy import deepcopy
 from .display import Display
 from ..mcts import MCTSTree as MCTS
-from ..checkers import Checkers, CheckersState
+from ..checkers import Checkers, CheckersState, CheckersPiece
 
 
 class Gamemode(Enum):
@@ -65,12 +66,14 @@ class PygameCheckers:
 
                 if self.xy_selected is not None:
                     move = (self.xy_selected, xy_current)
-                    if move in moves_8x8:
-                        move = moves_str[moves_8x8.index(move)]
-                        self.state = self.game.make_move(self.state, move)
-                        move_success = True
                     self.display.highlight_square(None)
                     self.xy_selected = None
+
+                    if move in moves_8x8:
+                        move = moves_str[moves_8x8.index(move)]
+                        self.animate_move(move)
+                        self.state = self.game.make_move(self.state, move)
+                        move_success = True
                 else:
                     self.display.highlight_square(xy_current)
                     self.xy_selected = xy_current
@@ -80,6 +83,7 @@ class PygameCheckers:
     def handle_ai_turn(self):
         """Handles the AI's turn, using MCTS to pick the best move."""
         move = self.ai.mcts_search(self.state)
+        self.animate_move(move)
         self.state = self.game.make_move(self.state, move)
 
     @staticmethod
@@ -100,3 +104,24 @@ class PygameCheckers:
             )
             converted.append(move_cords)
         return converted
+
+    def animate_move(self, move: str) -> None:
+        """Animates the move on the display."""
+        squares = move.split("x") if "x" in move else move.split("-")
+        sub_moves = [(int(squares[i]), int(squares[i + 1]))
+                     for i in range(len(squares) - 1)]
+        fake_board = self.state.get_board().get_squares().copy()
+        fake_state = deepcopy(self.state)
+
+        for sub_move in sub_moves:
+            start, end = sub_move
+            fake_state.board.squares = fake_board
+            inbetween = self.game._get_inbetween_fields(fake_state, start, end)
+
+            fake_board[end] = fake_board[start]
+            fake_board[start] = CheckersPiece.EMPTY
+            for square in inbetween:
+                fake_board[square] = CheckersPiece.EMPTY
+            self.display.draw_board(fake_state)
+            pygame.display.update()
+            pygame.time.wait(500)
