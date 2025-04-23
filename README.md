@@ -9,27 +9,16 @@ To ensure a transparent and easily understandable file structure for external us
 
 **How to run code in repository?**
 Use our packaged modules that strike your interest by importing them to your file of choice. (This repo contains already prepared 'main.py' as a demo)
-```bash
-python3 <filename.py>  
-```
-### Readme
-
-## Additional tips and info
-To further help with development, it is recommended to use useful tools for managing dependencies and environment configurations.
-
-### venv
-Python's `venv` allows you to easily manage isolated environments for your projects, enabling you to work with specific module/library versions or even different Python versions without conflicting with the globally installed Python interpreter.
-
-
-How to use:
+- Install requirements:
 ```bash
 python3 -m venv .venv  # Create venv  
 source .venv/bin/activate  # Activate venv  
 pip install -r requirements.txt  # Install requirements to venv  
 ```
-Basic Python libraries like pytest are already included in the requirements.
-
----
+- Run code:
+```bash
+python3 <filename.py>  
+```
 
 ## Project Organization
 
@@ -43,7 +32,7 @@ Basic Python libraries like pytest are already included in the requirements.
 │
 ├── setup.cfg          <- Configuration file for flake8 and pytest
 │
-├── main.py            <- Try your luck with our MCTS firsthand 
+├── main.py            <- Try your luck with our MCTS firsthand
 │
 └── src                <- Source code for use in this project.
     │
