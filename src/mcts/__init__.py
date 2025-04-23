@@ -1,1 +1,1 @@
-from .mcts_tree import MCTSTree
+from .mcts_tree import MCTSTree  # noqa

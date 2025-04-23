@@ -1,1 +1,1 @@
-from .game import PygameCheckers, Gamemode
+from .game import PygameCheckers, Gamemode  # noqa
