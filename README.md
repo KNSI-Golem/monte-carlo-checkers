@@ -1,3 +1,4 @@
+
 # KNSI GOLEM MCTS Checkers
 [![Flake8 Linting](https://github.com/Dnafivuq/golem_template/actions/workflows/lint.yml/badge.svg)](https://github.com/Dnafivuq/golem_template/actions/workflows/lint.yml)
 [![Pytest](https://github.com/Dnafivuq/golem_template/actions/workflows/test.yml/badge.svg)](https://github.com/Dnafivuq/golem_template/actions/workflows/test.yml)
@@ -67,4 +68,4 @@ python3 <filename.py>
 ```
 
 ## Credits
-- ['mrserji'](https://mrserji.itch.io/) for their checkers assets  
+- ['mrserji'](https://mrserji.itch.io/) for their checkers assets 
