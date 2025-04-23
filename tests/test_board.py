@@ -80,7 +80,7 @@ def test_get_closest_index():
     assert board.get_closest_index(5, 2) == 8
     assert board.get_closest_index(28, 2) is None
 
-    assert board.get_closest_index(4, 3) == board._get_left_down(4)
+    assert board.get_closest_index(4, 3) == board._get_right_down(4)
 
 
 def test_get_closest_indexes_normal_position():
