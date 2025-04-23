@@ -1,5 +1,6 @@
 from typing import TypeAlias
-from abc import ABC, abstractmethod
+from abc import ABC
+
 
 Move: TypeAlias = str
 

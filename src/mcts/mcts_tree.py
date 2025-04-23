@@ -26,11 +26,12 @@ class MCTSTree:
         :return: action that leads to the best child of init_state
         """
         with Manager() as manager:
-            
+
             global_data = manager.Namespace()
             global_data.best_move = ""
 
-            self.root = MCTSNode(deepcopy(init_state), self.game.get_moves(init_state))
+            self.root = MCTSNode(deepcopy(init_state),
+                                 self.game.get_moves(init_state))
 
             p = Process(target=self._run_mcts, args=(global_data, ))
             p.start()
@@ -52,7 +53,8 @@ class MCTSTree:
             if len(current_node.moves_not_taken) != 0:
                 return self._expansion(current_node)
 
-            ucb_scores = [node.get_ucb_score() for node in current_node.children_nodes]
+            ucb_scores = [node.get_ucb_score()
+                          for node in current_node.children_nodes]
             current_node = current_node.children_nodes[np.argmax(ucb_scores)]
 
         return current_node
@@ -61,8 +63,10 @@ class MCTSTree:
         move_index = np.random.randint(0, len(leaf_node.moves_not_taken))
         move = leaf_node.moves_not_taken.pop(move_index)
 
-        new_game_state = self.game.make_move(deepcopy(leaf_node.game_state), move)
-        new_node = MCTSNode(new_game_state, self.game.get_moves(new_game_state), move, leaf_node)
+        new_game_state = self.game.make_move(
+            deepcopy(leaf_node.game_state), move)
+        new_node = MCTSNode(new_game_state, self.game.get_moves(
+            new_game_state), move, leaf_node)
 
         leaf_node.children_nodes.append(new_node)
         return new_node
@@ -92,6 +96,8 @@ class MCTSTree:
         return max(root_children, key=lambda x: x.q_value / x.visit_count)
 
     def get_move_probs(self) -> str:
-        sorted_kids = sorted(self.root.children_nodes, key=lambda x: int(x.prev_move))
-        lst = [f"{child.prev_move} {child.q_value/child.visit_count:.3}" for child in sorted_kids]
+        sorted_kids = sorted(self.root.children_nodes,
+                             key=lambda x: int(x.prev_move))
+        lst = [
+            f"{child.prev_move} {child.q_value/child.visit_count:.3}" for child in sorted_kids]
         return " ".join(lst) + '\n'

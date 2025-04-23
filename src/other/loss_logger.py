@@ -1,10 +1,14 @@
-from mcts_tree import MCTSTree as MCTS
-from tictactoe import TicTacToe as Game
-from tictactoe import Player
+import os
 from tqdm import tqdm
 from collections import Counter
 
-import os
+# Leftover files needed adjusting
+# from ..mcts_tree import MCTSTree as MCTS
+# from ..tictactoe import TicTacToe as Game
+# from ..tictactoe import Player
+MCTS = None
+Game = None
+Player = None
 ttt = Game()
 
 
@@ -41,7 +45,8 @@ def main():
 
     outcomes = []
     for _ in tqdm(range(5)):
-        val, moves, move_probs = run_sim(explore=0.7, time_limit=1, print_board=False)
+        val, moves, move_probs = run_sim(
+            explore=0.7, time_limit=1, print_board=False)
         outcomes.append(val)
         if val != 0:
             lost_game_moves.append(moves)

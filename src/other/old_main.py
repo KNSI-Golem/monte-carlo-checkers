@@ -1,19 +1,18 @@
-import numpy as np
 import random
 from os import system
-from tqdm import tqdm
 from time import sleep
-from copy import deepcopy
-from collections import Counter
-
 from src.mcts import MCTSTree as MCTS
 from src.checkers import (
     Checkers,
-    CheckersBoard,
-    CheckersPiece,
-    CheckersState,
     CheckersPlayer,
+    # CheckersBoard,
+    # CheckersPiece,
+    # CheckersState,
 )
+# from copy import deepcopy
+# from collections import Counter
+# from tqdm import tqdm
+# import numpy as np
 
 game = Checkers()
 mcts1 = MCTS(game, 1.41, 200)
@@ -71,6 +70,7 @@ def play_versus_mcts():
         player_move = input("Your Move: ")
         state = game.make_move(state, player_move)
 
+
 def mcts_vs_random():
     state = game.get_starting_state()
 
@@ -92,15 +92,16 @@ def mcts_vs_random():
         sleep(2)
 
 
-
 def main():
-    ## outcomes = []
+    pass
+    # outcomes = []
     # for _ in tqdm(range(100)):
     #   outcomes.append(run_sim())
     # print(Counter(outcomes))
 
     # play_versus_mcts()
-    mcts_vs_random()
+    # mcts_vs_random()
+
 
 if __name__ == "__main__":
     main()
