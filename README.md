@@ -1,7 +1,5 @@
 
-# KNSI GOLEM MCTS Checkers
-[![Flake8 Linting](https://github.com/Dnafivuq/golem_template/actions/workflows/lint.yml/badge.svg)](https://github.com/Dnafivuq/golem_template/actions/workflows/lint.yml)
-[![Pytest](https://github.com/Dnafivuq/golem_template/actions/workflows/test.yml/badge.svg)](https://github.com/Dnafivuq/golem_template/actions/workflows/test.yml)
+# KNSI GOLEM MCTS Checkers [![Flake8 Linting](https://github.com/KNSI-Golem/monte-carlo-checkers/actions/workflows/lint.yaml/badge.svg)](https://github.com/KNSI-Golem/monte-carlo-checkers/actions/workflows/lint.yaml) [![Pytest](https://github.com/KNSI-Golem/monte-carlo-checkers/actions/workflows/test.yaml/badge.svg)](https://github.com/KNSI-Golem/monte-carlo-checkers/actions/workflows/test.yaml)
 
 This repository contains implementation of MCTS search algorithm along with orginal checkers made from scratch. It was prepared as a part of 2025's Konik stand for KNSI Golem to provide some form of attraction.
 
