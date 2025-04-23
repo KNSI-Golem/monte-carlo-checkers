@@ -32,7 +32,7 @@ class Display:
                 return None
 
     def draw_board(self, state: CheckersState) -> None:
-        self.screen.fill((0, 0, 0))
+        self.screen.fill((230, 230, 230))
         pieces = state.get_board().get_squares()
 
         for j in range(8):
@@ -76,7 +76,7 @@ class Display:
         self.highlighted_square = cords
 
     def _init_screen(self, width: int, height: int) -> pygame.Surface:
-        screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
+        screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
         pygame.display.set_caption("Golemowe Warcaby")
         return screen
 
